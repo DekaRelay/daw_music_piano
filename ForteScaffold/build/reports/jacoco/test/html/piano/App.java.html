@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>App.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ForteScaffold</a> &gt; <a href="index.source.html" class="el_package">piano</a> &gt; <span class="el_source">App.java</span></div><h1>App.java</h1><pre class="source lang-java linenums">package piano;
+
+import processing.core.PApplet;
+import processing.core.PImage;
+//import javax.sound.midi.*;
+
+public class App extends PApplet {
+
+    protected PianoRoll piano;
+    protected Pointer pointer;
+    protected PlayButton play;
+    protected StopButton stop;
+    protected SaveLoad saveLoad;
+    protected ClearButton clear;
+    protected ChangeInstrument change;
+
+    private PImage banner;
+    private PImage middleBanner;
+    private PImage keyboard;
+    private PImage drumLine;
+    
+    //private boolean bingo;
+
+<span class="fc" id="L24">    public App() {</span>
+        // Initialise variables here
+        //this.bingo = false;
+<span class="fc" id="L27">    }</span>
+
+    public void settings() {
+        // Don't touch
+<span class="nc" id="L31">        size(540, 355);</span>
+<span class="nc" id="L32">    }</span>
+
+    public void setup() {
+<span class="nc" id="L35">        frameRate(60);</span>
+        // Load images here
+<span class="nc" id="L37">        this.piano = new PianoRoll(60,75,this.loadImage(&quot;src/main/resources/grid.png&quot;),this.loadImage(&quot;src/main/resources/block.png&quot;));</span>
+<span class="nc" id="L38">        this.pointer = new Pointer(48,59,this.loadImage(&quot;src/main/resources/pointer.png&quot;));</span>
+<span class="nc" id="L39">        this.play = new PlayButton(5,5,this.loadImage(&quot;src/main/resources/play.png&quot;),this.loadImage(&quot;src/main/resources/pause.png&quot;),this.loadImage(&quot;src/main/resources/buttonBack.png&quot;));</span>
+<span class="nc" id="L40">        this.stop = new StopButton(50,5,this.loadImage(&quot;src/main/resources/stop.png&quot;),this.loadImage(&quot;src/main/resources/buttonBack.png&quot;));</span>
+<span class="nc" id="L41">        this.clear = new ClearButton(95,5,this.loadImage(&quot;src/main/resources/additional/reset.png&quot;), this.loadImage(&quot;src/main/resources/buttonBack.png&quot;));</span>
+<span class="nc" id="L42">        this.saveLoad = new SaveLoad(140,5,this.loadImage(&quot;src/main/resources/additional/save.png&quot;), this.loadImage(&quot;src/main/resources/additional/load.png&quot;), this.loadImage(&quot;src/main/resources/buttonBack.png&quot;));</span>
+<span class="nc" id="L43">        this.change = new ChangeInstrument(275,5,this.loadImage(&quot;src/main/resources/additional/prev.png&quot;), this.loadImage(&quot;src/main/resources/additional/next.png&quot;), this.loadImage(&quot;src/main/resources/additional/P.png&quot;), this.loadImage(&quot;src/main/resources/additional/M.png&quot;), this.loadImage(&quot;src/main/resources/additional/B.png&quot;), this.loadImage(&quot;src/main/resources/additional/S.png&quot;), this.loadImage(&quot;src/main/resources/buttonBack.png&quot;));</span>
+
+<span class="nc" id="L45">        this.banner = this.loadImage(&quot;src/main/resources/banner.png&quot;);</span>
+<span class="nc" id="L46">        this.keyboard = this.loadImage(&quot;src/main/resources/keyboard.png&quot;);</span>
+<span class="nc" id="L47">        this.middleBanner = this.loadImage(&quot;src/main/resources/middleBanner.png&quot;);</span>
+<span class="nc" id="L48">        this.drumLine = this.loadImage(&quot;src/main/resources/drumGrid.png&quot;);</span>
+        
+<span class="nc" id="L50">    }</span>
+
+    public void draw() {
+        // Draw your program here
+<span class="nc" id="L54">        this.pointer.tick(this.piano);</span>
+<span class="nc" id="L55">        this.piano.tick(this.pointer.returnX()+12);</span>
+        
+<span class="nc" id="L57">        this.rect(0,0,550,365);</span>
+<span class="nc" id="L58">        this.image(this.middleBanner,0,0);</span>
+<span class="nc" id="L59">        this.image(this.banner,0,0);</span>
+<span class="nc" id="L60">        this.image(this.keyboard,0,75);</span>
+<span class="nc" id="L61">        this.image(this.drumLine,0,335);</span>
+
+<span class="nc" id="L63">        this.play.draw(this);</span>
+<span class="nc" id="L64">        this.stop.draw(this);</span>
+<span class="nc" id="L65">        this.piano.draw(this);</span>
+<span class="nc" id="L66">        this.pointer.draw(this);</span>
+<span class="nc" id="L67">        this.clear.draw(this);</span>
+<span class="nc" id="L68">        this.saveLoad.draw(this);</span>
+<span class="nc" id="L69">        this.change.draw(this);</span>
+        
+<span class="nc" id="L71">    }</span>
+
+    public void mousePressed(){
+<span class="pc bpc" id="L74" title="6 of 8 branches missed.">        if(mouseX &gt; 5 &amp;&amp; mouseX &lt; 45 &amp;&amp; mouseY &gt; 5 &amp;&amp; mouseY &lt; 45){ //Play/pause button</span>
+<span class="nc" id="L75">            this.play.playPause(this.piano);</span>
+<span class="nc" id="L76">            this.pointer.activate();</span>
+<span class="pc bpc" id="L77" title="6 of 8 branches missed.">        }else if(mouseX &gt; 50 &amp;&amp; mouseX &lt; 90 &amp;&amp; mouseY &gt; 5 &amp;&amp; mouseY &lt; 45){  //Stop button</span>
+<span class="nc" id="L78">            this.stop.stop(this.pointer, this.play, this.piano);</span>
+<span class="pc bpc" id="L79" title="4 of 8 branches missed.">        }else if(mouseX &gt; 60 &amp;&amp; mouseX &lt; 540 &amp;&amp; mouseY &gt; 75 &amp;&amp; mouseY &lt; 355){  //Piano roll grid</span>
+<span class="fc" id="L80">            int x = mouseX;</span>
+<span class="fc" id="L81">            int y = mouseY;</span>
+<span class="nc" id="L82">            this.piano.check(x,y);</span>
+<span class="nc bnc" id="L83" title="All 8 branches missed.">        }else if(mouseX &gt; 95 &amp;&amp; mouseX &lt; 135 &amp;&amp; mouseY &gt; 5 &amp;&amp; mouseY &lt; 45){</span>
+<span class="nc" id="L84">            this.clear.clear(this.piano);</span>
+<span class="nc" id="L85">            this.stop.stop(this.pointer, this.play, this.piano);</span>
+<span class="nc bnc" id="L86" title="All 8 branches missed.">        }else if(mouseX &gt; 140 &amp;&amp; mouseX &lt; 180 &amp;&amp; mouseY &gt; 5 &amp;&amp; mouseY &lt; 45){</span>
+<span class="nc" id="L87">            this.saveLoad.save(this.piano);</span>
+<span class="nc" id="L88">            this.stop.stop(this.pointer, this.play, this.piano);</span>
+<span class="nc bnc" id="L89" title="All 8 branches missed.">        }else if(mouseX &gt; 185 &amp;&amp; mouseX &lt; 225 &amp;&amp; mouseY &gt; 5 &amp;&amp; mouseY &lt; 45){</span>
+<span class="nc" id="L90">            this.saveLoad.load(this.piano, this.change);</span>
+<span class="nc" id="L91">            this.stop.stop(this.pointer, this.play, this.piano);</span>
+<span class="nc bnc" id="L92" title="All 8 branches missed.">        }else if(mouseX &gt; 275 &amp;&amp; mouseX &lt; 315 &amp;&amp; mouseY &gt; 5 &amp;&amp; mouseY &lt; 45){</span>
+<span class="nc" id="L93">            this.change.changeLeft(this.piano);</span>
+<span class="nc bnc" id="L94" title="All 8 branches missed.">        }else if(mouseX &gt; 365 &amp;&amp; mouseX &lt; 405 &amp;&amp; mouseY &gt; 5 &amp;&amp; mouseY &lt; 45){</span>
+<span class="nc" id="L95">            this.change.changeRight(this.piano);</span>
+        }
+<span class="nc" id="L97">    }</span>
+
+    public static void main(String[] args) {
+        // Don't touch this
+<span class="nc" id="L101">        PApplet.main(&quot;piano.App&quot;);</span>
+<span class="nc" id="L102">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PianoRoll.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ForteScaffold</a> &gt; <a href="index.source.html" class="el_package">piano</a> &gt; <span class="el_source">PianoRoll.java</span></div><h1>PianoRoll.java</h1><pre class="source lang-java linenums">package piano;
+
+import processing.core.PApplet;
+import processing.core.PImage;
+import java.util.ArrayList;
+//import java.util.HashMap;
+import java.util.List;
+import java.util.Arrays;
+import javax.sound.midi.*;
+
+public class PianoRoll{
+
+    private int x;
+    private int y;
+
+    private PImage grid;
+    private PImage block;
+
+    private Synthesizer synth;
+    private MidiChannel[] midiChannel;
+    private Instrument[] instrument;
+    private Instrument currentInstrument;
+    private int currentInstrumentNum;
+
+    private List&lt;int[]&gt; blockXY;
+    
+<span class="fc" id="L27">    public PianoRoll(int x,int y,PImage grid,PImage block){</span>
+<span class="fc" id="L28">        this.x = x;</span>
+<span class="fc" id="L29">        this.y = y;</span>
+        
+<span class="fc" id="L31">        this.blockXY = new ArrayList&lt;int[]&gt;();</span>
+
+<span class="fc" id="L33">        this.grid = grid;</span>
+<span class="fc" id="L34">        this.block = block;</span>
+
+        try{
+<span class="fc" id="L37">            this.synth = MidiSystem.getSynthesizer();</span>
+<span class="fc" id="L38">            this.synth.open();</span>
+<span class="fc" id="L39">            this.midiChannel = this.synth.getChannels();</span>
+<span class="fc" id="L40">            this.instrument = this.synth.getDefaultSoundbank().getInstruments();</span>
+            //for(int i = 0 ; i&lt;this.instrument.length ; i++){
+                //System.out.println(this.instrument[i]);
+            //}
+<span class="fc" id="L44">            this.synth.loadAllInstruments(this.synth.getDefaultSoundbank());</span>
+<span class="fc" id="L45">            this.currentInstrument = this.instrument[0];</span>
+<span class="fc" id="L46">            this.currentInstrumentNum = 0;</span>
+<span class="nc" id="L47">        }catch(MidiUnavailableException Exception){</span>
+<span class="nc" id="L48">            System.out.println(&quot;uh oh&quot;);</span>
+<span class="fc" id="L49">        }</span>
+
+<span class="fc" id="L51">    }</span>
+
+    public boolean arrayListContains(List&lt;int[]&gt; list, int[] list2) {
+        
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        for (int i = 0; i &lt; list.size(); i++){</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">            if (Arrays.equals(list.get(i), list2)) return true;</span>
+        }
+<span class="fc" id="L58">        return false;</span>
+    }
+
+    public boolean arrayListRemove(List&lt;int[]&gt; list, int[] list2) {
+
+<span class="fc" id="L63">        int index = -1;</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        for (int i = 0; i &lt; list.size(); i++){</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">            if (Arrays.equals(list.get(i), list2)){</span>
+<span class="fc" id="L66">                index = i;</span>
+            }
+        }
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">        if(index!=-1){</span>
+<span class="fc" id="L70">            list.remove(index);</span>
+<span class="fc" id="L71">            return true;</span>
+        }else{
+<span class="nc" id="L73">            return false;</span>
+        }
+        
+    }
+
+
+    public boolean check(int x, int y){
+
+        
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        for(int i=60;i&lt;540;i+=15){</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">            for(int j=75;j&lt;355;j+=20){</span>
+
+<span class="pc bpc" id="L85" title="1 of 8 branches missed.">                if(x &gt; i &amp;&amp; x &lt; i+15 &amp;&amp; y &gt; j &amp;&amp; y &lt; j+20){</span>
+<span class="fc" id="L86">                    int[] coord = {i+1,j+1};</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">                    if(this.arrayListContains(this.blockXY,coord)){</span>
+<span class="fc" id="L88">                        this.arrayListRemove(this.blockXY,coord);</span>
+                        //remove from piano sequence
+<span class="fc" id="L90">                        return true;</span>
+                        
+                    }else{
+<span class="fc" id="L93">                        this.blockXY.add(coord);</span>
+                        //add to piano sequence
+<span class="fc" id="L95">                        return true;</span>
+                        
+                    }
+                }
+                
+            }
+        }
+<span class="fc" id="L102">        return false;</span>
+        
+        
+    }
+    
+    public boolean playSound(List&lt;int[]&gt; i){
+        
+        
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        if(i.size() == 14){</span>
+<span class="fc" id="L111">            midiChannel[0].programChange(this.currentInstrument.getPatch().getProgram());</span>
+<span class="fc" id="L112">            midiChannel[10].programChange(this.instrument[115].getPatch().getProgram());</span>
+            //for(int j = 0;j &lt; i.size();j++){
+                //midiChannel[0].noteOn(72-i.get(j)[0],i.get(j)[1]);
+            //}
+            
+<span class="fc" id="L117">            midiChannel[0].noteOn(72-i.get(0)[0],i.get(0)[1]);</span>
+<span class="fc" id="L118">            midiChannel[0].noteOn(72-i.get(1)[0],i.get(1)[1]);</span>
+<span class="fc" id="L119">            midiChannel[0].noteOn(72-i.get(2)[0],i.get(2)[1]);</span>
+<span class="fc" id="L120">            midiChannel[0].noteOn(72-i.get(3)[0],i.get(3)[1]);</span>
+<span class="fc" id="L121">            midiChannel[0].noteOn(72-i.get(4)[0],i.get(4)[1]);</span>
+<span class="fc" id="L122">            midiChannel[0].noteOn(72-i.get(5)[0],i.get(5)[1]);</span>
+<span class="fc" id="L123">            midiChannel[0].noteOn(72-i.get(6)[0],i.get(6)[1]);</span>
+<span class="fc" id="L124">            midiChannel[0].noteOn(72-i.get(7)[0],i.get(7)[1]);</span>
+<span class="fc" id="L125">            midiChannel[0].noteOn(72-i.get(8)[0],i.get(8)[1]);</span>
+<span class="fc" id="L126">            midiChannel[0].noteOn(72-i.get(9)[0],i.get(9)[1]);</span>
+<span class="fc" id="L127">            midiChannel[0].noteOn(72-i.get(10)[0],i.get(10)[1]);</span>
+<span class="fc" id="L128">            midiChannel[0].noteOn(72-i.get(11)[0],i.get(11)[1]);</span>
+<span class="fc" id="L129">            midiChannel[0].noteOn(72-i.get(12)[0],i.get(12)[1]);</span>
+<span class="fc" id="L130">            midiChannel[10].noteOn(72-i.get(13)[0],i.get(13)[1]);</span>
+<span class="fc" id="L131">            return true;</span>
+        }else{
+<span class="fc" id="L133">            return false;</span>
+        }
+        
+
+    }
+
+    public int tick(int x){
+        
+<span class="fc" id="L141">        List&lt;int[]&gt; keys = new ArrayList&lt;int[]&gt;();</span>
+        
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        if(this.blockXY.size() == 0){</span>
+<span class="fc" id="L144">            return 0;</span>
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">        }else if((x - 60)%15 == 0){</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">            for(int i = 0 ; i&lt;14 ; i++){</span>
+                
+<span class="nc" id="L148">                int[] velocity = {i,0};</span>
+<span class="nc" id="L149">                keys.add(velocity);</span>
+            }
+<span class="nc" id="L151">            this.playSound(keys);</span>
+<span class="nc" id="L152">            return 1;</span>
+        
+        }else{
+<span class="fc" id="L155">            int[] coord = {x,75};</span>
+<span class="fc" id="L156">            int edit = 0;</span>
+
+<span class="fc bfc" id="L158" title="All 2 branches covered.">            for(int j = 75 ; j&lt;355 ; j+=20){</span>
+                
+<span class="fc" id="L160">                coord[1] = j+1;</span>
+<span class="fc" id="L161">                edit = (j-75)/20;</span>
+
+<span class="pc bpc" id="L163" title="1 of 2 branches missed.">                if(this.arrayListContains(this.blockXY,coord)){</span>
+
+<span class="nc" id="L165">                    int[] velocity = {edit,95};</span>
+<span class="nc" id="L166">                    keys.add(velocity);</span>
+<span class="nc" id="L167">                }else{</span>
+
+<span class="fc" id="L169">                    int[] velocity = {edit,0};</span>
+<span class="fc" id="L170">                    keys.add(velocity);</span>
+                }
+            }
+
+<span class="pc bpc" id="L174" title="1 of 2 branches missed.">            if(keys.size()&gt;0){</span>
+
+<span class="fc" id="L176">                this.playSound(keys);</span>
+                
+            }
+<span class="fc" id="L179">            return 2;</span>
+        }
+        
+        
+    }
+
+    public boolean soundOff(){
+<span class="fc" id="L186">        List&lt;int[]&gt; keys = new ArrayList&lt;int[]&gt;();</span>
+<span class="fc bfc" id="L187" title="All 2 branches covered.">        for(int i = 0 ; i&lt;14 ; i++){</span>
+                
+<span class="fc" id="L189">            int[] velocity = {i,0};</span>
+<span class="fc" id="L190">            keys.add(velocity);</span>
+        }
+<span class="fc" id="L192">        this.playSound(keys);</span>
+<span class="fc" id="L193">        return true;</span>
+    }
+
+    public boolean reset(){
+<span class="fc" id="L197">        this.blockXY = new ArrayList&lt;int[]&gt;();</span>
+<span class="fc" id="L198">        return true;</span>
+    }
+
+    public List&lt;int[]&gt; getBlocks(){
+<span class="fc" id="L202">        return this.blockXY;</span>
+    }
+
+    public void setBlocks(List&lt;int[]&gt; blocks){
+<span class="fc" id="L206">        this.blockXY = blocks;</span>
+<span class="fc" id="L207">    }</span>
+
+    public void setInstrument(int num){
+<span class="fc" id="L210">        this.currentInstrument = this.instrument[num];</span>
+<span class="fc" id="L211">        this.currentInstrumentNum = num;</span>
+<span class="fc" id="L212">    }</span>
+
+    public int returnInstrument(){
+<span class="fc" id="L215">        return this.currentInstrumentNum;</span>
+    }
+
+
+    public void draw(PApplet app){
+<span class="nc" id="L220">        app.image(this.grid,this.x,this.y);</span>
+
+<span class="nc bnc" id="L222" title="All 2 branches missed.">        for(int i = 0;i&lt;this.blockXY.size();i++){</span>
+<span class="nc" id="L223">            int[] coord = new int[2];</span>
+<span class="nc" id="L224">            coord=this.blockXY.get(i);</span>
+<span class="nc" id="L225">            app.image(this.block,coord[0],coord[1]);</span>
+
+        }
+
+<span class="nc" id="L229">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

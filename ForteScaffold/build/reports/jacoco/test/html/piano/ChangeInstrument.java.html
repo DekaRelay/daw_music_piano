@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ChangeInstrument.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ForteScaffold</a> &gt; <a href="index.source.html" class="el_package">piano</a> &gt; <span class="el_source">ChangeInstrument.java</span></div><h1>ChangeInstrument.java</h1><pre class="source lang-java linenums">package piano;
+
+import processing.core.PApplet;
+import processing.core.PImage;
+
+public class ChangeInstrument {
+
+    private int changeX;
+    private int changeY;
+
+    private int[] instruments;
+
+    private PImage changeLeft;
+    private PImage changeRight;
+    private PImage P;
+    private PImage M;
+    private PImage B;
+    private PImage S;
+    private PImage buttonBack;
+
+    private PImage current;
+    private int currentNum;
+    
+<span class="fc" id="L24">    public ChangeInstrument(int x, int y, PImage sprite1, PImage sprite2, PImage sprite3, PImage sprite4, PImage sprite5, PImage sprite6, PImage sprite7){</span>
+<span class="fc" id="L25">        this.changeX = x;</span>
+<span class="fc" id="L26">        this.changeY = y;</span>
+
+<span class="fc" id="L28">        this.changeLeft = sprite1;</span>
+<span class="fc" id="L29">        this.changeRight = sprite2;</span>
+<span class="fc" id="L30">        this.P = sprite3;</span>
+<span class="fc" id="L31">        this.M = sprite4;</span>
+<span class="fc" id="L32">        this.B = sprite5;</span>
+<span class="fc" id="L33">        this.S = sprite6;</span>
+<span class="fc" id="L34">        this.buttonBack = sprite7;</span>
+
+<span class="fc" id="L36">        this.current = this.P;</span>
+<span class="fc" id="L37">        this.currentNum = 0;</span>
+
+        //this.instruments = {0, 12, 105, 65};
+<span class="fc" id="L40">        this.instruments = new int[4];</span>
+<span class="fc" id="L41">        this.instruments[0] = 0;</span>
+<span class="fc" id="L42">        this.instruments[1] = 12;</span>
+<span class="fc" id="L43">        this.instruments[2] = 105;</span>
+<span class="fc" id="L44">        this.instruments[3] = 65;</span>
+
+<span class="fc" id="L46">    }</span>
+
+    public void draw(PApplet app){
+<span class="nc" id="L49">        app.image(this.buttonBack, this.changeX, this.changeY);</span>
+<span class="nc" id="L50">        app.image(this.changeLeft, this.changeX, this.changeY);</span>
+<span class="nc" id="L51">        app.image(this.buttonBack, this.changeX+45, this.changeY);</span>
+<span class="nc" id="L52">        app.image(this.current, this.changeX+45, this.changeY);</span>
+<span class="nc" id="L53">        app.image(this.buttonBack, this.changeX+90, this.changeY);</span>
+<span class="nc" id="L54">        app.image(this.changeRight, this.changeX+90, this.changeY);</span>
+<span class="nc" id="L55">    }</span>
+
+    public int changeRight(PianoRoll piano){
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if(this.currentNum == 0){</span>
+<span class="fc" id="L59">            this.current = this.M;</span>
+<span class="fc" id="L60">            piano.setInstrument(12);</span>
+<span class="fc" id="L61">            this.currentNum = 12;</span>
+<span class="fc" id="L62">            return 12;</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        }else if(this.currentNum == 12){</span>
+<span class="fc" id="L64">            this.current = this.B;</span>
+<span class="fc" id="L65">            piano.setInstrument(105);</span>
+<span class="fc" id="L66">            this.currentNum = 105;</span>
+<span class="fc" id="L67">            return 105;</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        }else if(this.currentNum == 105){</span>
+<span class="fc" id="L69">            this.current = this.S;</span>
+<span class="fc" id="L70">            piano.setInstrument(65);</span>
+<span class="fc" id="L71">            this.currentNum = 65;</span>
+<span class="fc" id="L72">            return 65;</span>
+        }else{
+<span class="fc" id="L74">            this.current = this.P;</span>
+<span class="fc" id="L75">            piano.setInstrument(0);</span>
+<span class="fc" id="L76">            this.currentNum = 0;</span>
+<span class="fc" id="L77">            return 0;</span>
+        }
+
+    }
+
+    public int changeLeft(PianoRoll piano){
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        if(this.currentNum == 0){</span>
+<span class="fc" id="L84">            this.current = this.S;</span>
+<span class="fc" id="L85">            piano.setInstrument(65);</span>
+<span class="fc" id="L86">            this.currentNum = 65;</span>
+<span class="fc" id="L87">            return 65;</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        }else if(this.currentNum == 65){</span>
+<span class="fc" id="L89">            this.current = this.B;</span>
+<span class="fc" id="L90">            piano.setInstrument(105);</span>
+<span class="fc" id="L91">            this.currentNum = 105;</span>
+<span class="fc" id="L92">            return 105;</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        }else if(this.currentNum == 105){</span>
+<span class="fc" id="L94">            this.current = this.M;</span>
+<span class="fc" id="L95">            piano.setInstrument(12);</span>
+<span class="fc" id="L96">            this.currentNum = 12;</span>
+<span class="fc" id="L97">            return 12;</span>
+        }else{
+<span class="fc" id="L99">            this.current = this.P;</span>
+<span class="fc" id="L100">            piano.setInstrument(0);</span>
+<span class="fc" id="L101">            this.currentNum = 0;</span>
+<span class="fc" id="L102">            return 0;</span>
+        }
+    }
+
+    public boolean setCurrent(PianoRoll piano, int num){
+<span class="fc bfc" id="L107" title="All 2 branches covered.">        if(num == 0){</span>
+<span class="fc" id="L108">            this.current = this.P;</span>
+<span class="fc" id="L109">            piano.setInstrument(num);</span>
+<span class="fc" id="L110">            return true;</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        }else if(num == 12){</span>
+<span class="fc" id="L112">            this.current = this.M;</span>
+<span class="fc" id="L113">            piano.setInstrument(num);</span>
+<span class="fc" id="L114">            return true;</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">        }else if(num == 105){</span>
+<span class="fc" id="L116">            this.current = this.B;</span>
+<span class="fc" id="L117">            piano.setInstrument(num);</span>
+<span class="fc" id="L118">            return true;</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">        }else if(num == 65){</span>
+<span class="fc" id="L120">            this.current = this.S;</span>
+<span class="fc" id="L121">            piano.setInstrument(num);</span>
+<span class="fc" id="L122">            return true;</span>
+        }else{
+<span class="fc" id="L124">            return false;</span>
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
